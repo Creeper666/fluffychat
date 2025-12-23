@@ -14,11 +14,11 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final homeserver = controller.widget.client.homeserver
-        .toString()
-        .replaceFirst('https://', '');
-    final title = L10n.of(context).logInTo(homeserver);
-    final titleParts = title.split(homeserver);
+    // final homeserver = controller.widget.client.homeserver
+    //     .toString()
+    //     .replaceFirst('https://', '');
+    // final title = L10n.of(context).logInTo(homeserver);
+    // final titleParts = title.split(homeserver);
 
     return LoginScaffold(
       enforceMobileMode: Matrix.of(
@@ -29,16 +29,7 @@ class LoginView extends StatelessWidget {
         automaticallyImplyLeading: !controller.loading,
         titleSpacing: !controller.loading ? 0 : null,
         title: Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(text: titleParts.first),
-              TextSpan(
-                text: homeserver,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              TextSpan(text: titleParts.last),
-            ],
-          ),
+          TextSpan(text: "登录"),
           style: const TextStyle(fontSize: 18),
         ),
       ),
@@ -48,11 +39,11 @@ class LoginView extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               children: <Widget>[
-                Hero(
-                  tag: 'info-logo',
-                  child: Image.asset('assets/banner_transparent.png'),
-                ),
-                const SizedBox(height: 16),
+                // Hero(
+                //   tag: 'info-logo',
+                //   child: Image.asset('assets/banner_transparent.png'),
+                // ),
+                const SizedBox(height: 64),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: TextField(
@@ -70,7 +61,7 @@ class LoginView extends StatelessWidget {
                       prefixIcon: const Icon(Icons.account_box_outlined),
                       errorText: controller.usernameError,
                       errorStyle: const TextStyle(color: Colors.orange),
-                      hintText: '@username:domain',
+                      hintText: 'username',
                       labelText: L10n.of(context).emailOrUsername,
                     ),
                   ),
@@ -101,7 +92,7 @@ class LoginView extends StatelessWidget {
                           color: Colors.black,
                         ),
                       ),
-                      hintText: '******',
+                      hintText: 'password',
                       labelText: L10n.of(context).password,
                     ),
                   ),

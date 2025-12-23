@@ -37,7 +37,10 @@ class FluffyChatApp extends StatelessWidget {
   static final GoRouter router = GoRouter(
     routes: AppRoutes.routes,
     debugLogDiagnostics: true,
-  );
+  )..routeInformationProvider.addListener(() {
+      AppRoutes.currentRoute =
+          router.routeInformationProvider.value.uri.toString();
+    });
 
   @override
   Widget build(BuildContext context) {

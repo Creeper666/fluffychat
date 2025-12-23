@@ -29,6 +29,14 @@ class HomeserverPicker extends StatefulWidget {
 }
 
 class HomeserverPickerController extends State<HomeserverPicker> {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     checkHomeserverAction();
+  //   });
+  // }
+
   bool isLoading = false;
 
   final TextEditingController homeserverController = TextEditingController(
@@ -83,8 +91,13 @@ class HomeserverPickerController extends State<HomeserverPicker> {
         }
         return ssoLoginAction();
       }
+      // String route_ = GoRouter.of(context).routeInformationProvider.value.uri.path;
+      // context.push(
+      //   '${route_}/login',
+      //   extra: client,
+      // );
       context.push(
-        '${GoRouter.of(context).routeInformationProvider.value.uri.path}/login',
+        '/home/login',
         extra: client,
       );
     } catch (e) {

@@ -17,19 +17,19 @@ abstract class UpdateNotifier {
     final storedVersion = store.getString(versionStoreKey);
 
     if (currentVersion != storedVersion) {
-      if (storedVersion != null) {
-        scaffoldMessenger.showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 30),
-            showCloseIcon: true,
-            content: Text(L10n.of(context).updateInstalled(currentVersion)),
-            action: SnackBarAction(
-              label: L10n.of(context).changelog,
-              onPressed: () => launchUrlString(AppConfig.changelogUrl),
-            ),
-          ),
-        );
-      }
+      // if (storedVersion != null) {
+      //   scaffoldMessenger.showSnackBar(
+      //     SnackBar(
+      //       duration: const Duration(seconds: 30),
+      //       showCloseIcon: true,
+      //       content: Text(L10n.of(context).updateInstalled(currentVersion)),
+      //       action: SnackBarAction(
+      //         label: L10n.of(context).changelog,
+      //         onPressed: () => launchUrlString(AppConfig.changelogUrl),
+      //       ),
+      //     ),
+      //   );
+      // }
       await store.setString(versionStoreKey, currentVersion);
     }
   }

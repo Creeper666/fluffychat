@@ -49,16 +49,16 @@ class ClientChooserButton extends StatelessWidget {
           ],
         ),
       ),
-      PopupMenuItem(
-        value: SettingsAction.invite,
-        child: Row(
-          children: [
-            Icon(Icons.adaptive.share_outlined),
-            const SizedBox(width: 18),
-            Text(L10n.of(context).inviteContact),
-          ],
-        ),
-      ),
+      // PopupMenuItem(
+      //   value: SettingsAction.invite,
+      //   child: Row(
+      //     children: [
+      //       Icon(Icons.adaptive.share_outlined),
+      //       const SizedBox(width: 18),
+      //       Text(L10n.of(context).inviteContact),
+      //     ],
+      //   ),
+      // ),
       PopupMenuItem(
         value: SettingsAction.archive,
         child: Row(
@@ -70,16 +70,16 @@ class ClientChooserButton extends StatelessWidget {
         ),
       ),
       if (Matrix.of(context).backgroundPush?.firebaseEnabled != true)
-        PopupMenuItem(
-          value: SettingsAction.support,
-          child: Row(
-            children: [
-              const Icon(Icons.favorite, color: Colors.red),
-              const SizedBox(width: 18),
-              Text(L10n.of(context).donate),
-            ],
-          ),
-        ),
+        // PopupMenuItem(
+        //   value: SettingsAction.support,
+        //   child: Row(
+        //     children: [
+        //       const Icon(Icons.favorite, color: Colors.red),
+        //       const SizedBox(width: 18),
+        //       Text(L10n.of(context).donate),
+        //     ],
+        //   ),
+        // ),
       PopupMenuItem(
         value: SettingsAction.settings,
         child: Row(
@@ -137,29 +137,29 @@ class ClientChooserButton extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      IconButton(
-                        icon: const Icon(Icons.edit_outlined),
-                        onPressed: () => controller.editBundlesForAccount(
-                          client.userID,
-                          bundle,
-                        ),
-                      ),
+                      // IconButton(
+                      //   icon: const Icon(Icons.edit_outlined),
+                      //   onPressed: () => controller.editBundlesForAccount(
+                      //     client.userID,
+                      //     bundle,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
               ),
             ),
       ],
-      PopupMenuItem(
-        value: SettingsAction.addAccount,
-        child: Row(
-          children: [
-            const Icon(Icons.person_add_outlined),
-            const SizedBox(width: 18),
-            Text(L10n.of(context).addAccount),
-          ],
-        ),
-      ),
+      // PopupMenuItem(
+      //   value: SettingsAction.addAccount,
+      //   child: Row(
+      //     children: [
+      //       const Icon(Icons.person_add_outlined),
+      //       const SizedBox(width: 18),
+      //       Text(L10n.of(context).addAccount),
+      //     ],
+      //   ),
+      // ),
     ];
   }
 

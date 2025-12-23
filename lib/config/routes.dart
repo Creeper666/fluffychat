@@ -39,12 +39,22 @@ import 'package:fluffychat/widgets/log_view.dart';
 import 'package:fluffychat/widgets/matrix.dart';
 import 'package:fluffychat/widgets/share_scaffold_dialog.dart';
 
+import 'package:fluffychat/pages/gamestore/main.dart';
+import 'package:fluffychat/pages/gamestore/pages/article_detail.dart';
+import 'package:fluffychat/pages/gamestore/pages/search.dart';
+import 'package:fluffychat/pages/gamestore/pages/update.dart';
+import 'package:fluffychat/pages/gamestore/pages/downloads.dart';
+import 'package:fluffychat/pages/gamestore/models/wp.dart';
+
 abstract class AppRoutes {
+  /// 全局监控当前路由
+  static String currentRoute = '/';
+
   static FutureOr<String?> loggedInRedirect(
     BuildContext context,
     GoRouterState state,
   ) => Matrix.of(context).widget.clients.any((client) => client.isLogged())
-      ? '/rooms'
+      ? '/gamestore'
       : null;
 
   static FutureOr<String?> loggedOutRedirect(
@@ -52,24 +62,49 @@ abstract class AppRoutes {
     GoRouterState state,
   ) => Matrix.of(context).widget.clients.any((client) => client.isLogged())
       ? null
-      : '/home';
-
-  AppRoutes();
+      : '/gamestore';
 
   static final List<RouteBase> routes = [
+    GoRoute(path: '/', redirect: (context, state) => '/gamestore'),
+    // 游戏库首页作为登录后的主要入口
     GoRoute(
-      path: '/',
-      redirect: (context, state) =>
-          Matrix.of(context).widget.clients.any((client) => client.isLogged())
-          ? '/rooms'
-          : '/home',
+      path: '/gamestore',
+      pageBuilder: (context, state) =>
+          defaultPageBuilder(context, state, const GameStoreApp()),
+      routes: [
+        GoRoute(
+          path: 'detail',
+          pageBuilder: (context, state) => defaultPageBuilder(
+            context,
+            state,
+            ArticleDetailPage(post: state.extra as WpPost),
+          ),
+        ),
+        GoRoute(
+          path: 'search',
+          pageBuilder: (context, state) =>
+              defaultPageBuilder(context, state, const SearchPage()),
+        ),
+        GoRoute(
+          path: 'update',
+          pageBuilder: (context, state) =>
+              defaultPageBuilder(context, state, const UpdatePage()),
+        ),
+        GoRoute(
+          path: 'downloads',
+          pageBuilder: (context, state) =>
+              defaultPageBuilder(context, state, const DownloadsPage()),
+        ),
+      ],
     ),
     GoRoute(
       path: '/home',
       pageBuilder: (context, state) => defaultPageBuilder(
         context,
         state,
-        const HomeserverPicker(addMultiAccount: false),
+        // const HomeserverPicker(addMultiAccount: false),
+        const GameStoreApp(initialIndex: 3),
+        // Login(client: Matrix.of(context).getLoginClient() as Client),
       ),
       redirect: loggedInRedirect,
       routes: [
@@ -112,13 +147,15 @@ abstract class AppRoutes {
         state,
         FluffyThemes.isColumnMode(context) &&
                 state.fullPath?.startsWith('/rooms/settings') == false
+
             ? TwoColumnLayout(
-                mainView: ChatList(
-                  activeChat: state.pathParameters['roomid'],
-                  activeSpace: state.uri.queryParameters['spaceId'],
-                  displayNavigationRail:
-                      state.path?.startsWith('/rooms/settings') != true,
-                ),
+                mainView:GameStoreApp(),
+                //  ChatList(
+                //   activeChat: state.pathParameters['roomid'],
+                //   activeSpace: state.uri.queryParameters['spaceId'],
+                //   displayNavigationRail:
+                //       state.path?.startsWith('/rooms/settings') != true,
+                // ),
                 sideView: child,
               )
             : child,
@@ -132,10 +169,7 @@ abstract class AppRoutes {
             state,
             FluffyThemes.isColumnMode(context)
                 ? const EmptyPage()
-                : ChatList(
-                    activeChat: state.pathParameters['roomid'],
-                    activeSpace: state.uri.queryParameters['spaceId'],
-                  ),
+                : const GameStoreApp(initialIndex: 3),
           ),
           routes: [
             GoRoute(

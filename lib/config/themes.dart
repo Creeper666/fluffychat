@@ -47,6 +47,12 @@ abstract class FluffyThemes {
     );
     final isColumnMode = FluffyThemes.isColumnMode(context);
     return ThemeData(
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: <TargetPlatform, PageTransitionsBuilder>{
+          TargetPlatform.android:
+              FadeUpwardsPageTransitionsBuilder(), // Apply this to every platforms you need.
+        },
+      ),
       visualDensity: VisualDensity.standard,
       useMaterial3: true,
       brightness: brightness,
