@@ -11,7 +11,10 @@ class CinnyChatPage extends StatefulWidget {
   /// Cinny 实例的 URL，默认使用官方实例
   final String cinnyUrl;
 
-  const CinnyChatPage({super.key, this.cinnyUrl = 'cinny.galgames.vip'});
+  const CinnyChatPage({
+    super.key,
+    this.cinnyUrl = 'https://cinny.galgames.vip',
+  });
 
   @override
   State<CinnyChatPage> createState() => _CinnyChatPageState();
@@ -57,10 +60,25 @@ class _CinnyChatPageState extends State<CinnyChatPage>
           },
           onWebResourceError: (WebResourceError error) {
             if (mounted) {
-              setState(() {
-                _isLoading = false;
-                _errorMessage = '加载失败: ${error.description}';
-              });
+              // 检查是否为网络错误
+              final isNetworkError =
+                  error.errorType == WebResourceErrorType.hostLookup ||
+                  error.errorType == WebResourceErrorType.connect ||
+                  error.errorType == WebResourceErrorType.timeout ||
+                  error.description.toLowerCase().contains('network') ||
+                  error.description.toLowerCase().contains('connection') ||
+                  error.description.toLowerCase().contains('internet');
+
+              if (isNetworkError) {
+                // 网络错误：显示错误信息，让用户手动重试
+                setState(() {
+                  _isLoading = false;
+                  _errorMessage = '网络连接失败: ${error.description}';
+                });
+              } else {
+                // 其他错误：自动刷新
+                _refresh();
+              }
             }
           },
           onNavigationRequest: (NavigationRequest request) {

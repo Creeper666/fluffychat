@@ -107,13 +107,16 @@ class _GameStoreAppState extends State<GameStoreApp> {
           ],
         ),
         body: SafeArea(
-          child: <Widget>[
-            const HomePage(),
-            const SortPage(),
-            const PlatformPage(),
-            const CinnyChatPage(),
-            const SettingsPage(),
-          ][_index],
+          child: IndexedStack(
+            index: _index,
+            children: const [
+              HomePage(),
+              SortPage(),
+              PlatformPage(),
+              CinnyChatPage(),
+              SettingsPage(),
+            ],
+          ),
         ),
       ),
     );
