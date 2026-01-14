@@ -25,7 +25,7 @@ class WpEmbedded {
   final List<WpFeaturedMedia> featuredMedia;
   WpEmbedded({required this.featuredMedia});
   factory WpEmbedded.fromJson(Map<String, dynamic> json) {
-    final List<dynamic> list = (json['wp:featuredmedia'] ?? []) as List<dynamic>;
+    final list = (json['wp:featuredmedia'] ?? []) as List<dynamic>;
     return WpEmbedded(
       featuredMedia: list
           .whereType<Map<String, dynamic>>()

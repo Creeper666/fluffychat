@@ -37,7 +37,7 @@ class _UpdatePageState extends State<UpdatePage> {
       final resp = await http.get(Uri.parse(_updateUrl));
       if (!mounted) return;
       if (resp.statusCode >= 200 && resp.statusCode < 300) {
-        final Map<String, dynamic> data = jsonDecode(resp.body) as Map<String, dynamic>;
+        final data = jsonDecode(resp.body) as Map<String, dynamic>;
         final rendered = ((data['content'] ?? {}) as Map<String, dynamic>)['rendered'] as String?;
         setState(() => _html = rendered ?? '');
       } else {

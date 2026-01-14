@@ -58,7 +58,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
   }
 
   Future<void> _showCompletionDialog(String taskId) async {
-    if (!Platform.isAndroid && !Platform.isIOS) return;
+    if (!Platform.isAndroid) return;
     final tasks = await FlutterDownloader.loadTasks();
     DownloadTask? task;
     try {
@@ -96,7 +96,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
   }
 
   Future<void> _refreshTasks() async {
-    if (!Platform.isAndroid && !Platform.isIOS) {
+    if (!Platform.isAndroid) {
       if (mounted) setState(() => _tasks = []);
       return;
     }
@@ -200,15 +200,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
                           IconButton(
                             icon: const Icon(Icons.refresh),
                             onPressed: () async {
-                              final originalUrl = await getOriginalUrl(t.taskId);
-                              if (originalUrl != null) {
-                                await FlutterDownloader.remove(taskId: t.taskId, shouldDeleteContent: true);
-                                if (!mounted) return;
-                                // ignore: use_build_context_synchronously
-                                await downloadAlistFile(originalUrl, context: context, opts: DownloadOptions(filename: t.filename));
-                              } else {
                                 await FlutterDownloader.retry(taskId: t.taskId);
-                              }
                               await _load();
                             },
                           ),

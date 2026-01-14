@@ -31,7 +31,7 @@ Future<WpPagedPosts> fetchPosts(
     throw Exception('Error fetching posts: ${resp.statusCode}');
   }
   final totalPages = int.tryParse(resp.headers['x-wp-totalpages'] ?? '0') ?? 0;
-  final List<dynamic> data = jsonDecode(resp.body) as List<dynamic>;
+  final data = jsonDecode(resp.body) as List<dynamic>;
   final posts = data
       .whereType<Map<String, dynamic>>()
       .map(WpPost.fromJson)
@@ -47,7 +47,7 @@ Future<WpPost> fetchPost(int id) async {
   if (resp.statusCode < 200 || resp.statusCode >= 300) {
     throw Exception('Error fetching post $id: ${resp.statusCode}');
   }
-  final Map<String, dynamic> data = jsonDecode(resp.body) as Map<String, dynamic>;
+  final data = jsonDecode(resp.body) as Map<String, dynamic>;
   return WpPost.fromJson(data);
 }
 
@@ -72,7 +72,7 @@ Future<List<WpCategory>> fetchCategories({int perPage = 100}) async {
   if (resp.statusCode < 200 || resp.statusCode >= 300) {
     throw Exception('Error fetching categories: ${resp.statusCode}');
   }
-  final List<dynamic> data = jsonDecode(resp.body) as List<dynamic>;
+  final data = jsonDecode(resp.body) as List<dynamic>;
   return data.whereType<Map<String, dynamic>>().map(WpCategory.fromJson).toList();
 }
 
@@ -86,7 +86,7 @@ Future<int?> fetchCategoryIdByName(String name) async {
   if (resp.statusCode < 200 || resp.statusCode >= 300) {
     return null;
   }
-  final List<dynamic> cats = jsonDecode(resp.body) as List<dynamic>;
+  final cats = jsonDecode(resp.body) as List<dynamic>;
   final list = cats.whereType<Map<String, dynamic>>().toList();
   if (list.isEmpty) return null;
   final exact = list.firstWhere(

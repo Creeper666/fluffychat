@@ -66,7 +66,6 @@ extension DateTimeExtension on DateTime {
 
   /// If the DateTime is today, this returns [localizedTimeOfDay()], if not it also
   /// shows the date.
-  /// TODO: Add localization
   String localizedTime(BuildContext context) {
     final now = DateTime.now();
 
@@ -87,13 +86,12 @@ extension DateTimeExtension on DateTime {
 
     final l10n24h = L10n.of(context).alwaysUse24HourFormat == 'true';
 
-    // https://github.com/krille-chan/fluffychat/pull/1457#discussion_r1836817914
+    // Android respects system setting
     if (PlatformInfos.isAndroid) {
       return mediaQuery24h;
-    } else if (PlatformInfos.isIOS) {
-      return mediaQuery24h || l10n24h;
     }
 
+    // Desktop uses locale setting
     return l10n24h;
   }
 }

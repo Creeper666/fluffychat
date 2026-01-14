@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fluffychat/config/setting_keys.dart';
 import 'package:fluffychat/widgets/adaptive_dialogs/show_text_input_dialog.dart';
-import 'package:fluffychat/widgets/matrix.dart';
 
 class ConfigViewer extends StatefulWidget {
   const ConfigViewer({super.key});
@@ -17,7 +15,6 @@ class ConfigViewer extends StatefulWidget {
 class _ConfigViewerState extends State<ConfigViewer> {
   void _changeSetting(
     AppSettings appSetting,
-    SharedPreferences store,
     String initialValue,
   ) async {
     if (appSetting is AppSettings<bool>) {
@@ -52,7 +49,7 @@ class _ConfigViewerState extends State<ConfigViewer> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Advanced configurations'),
+        title: const Text('高级配置'),
         leading: BackButton(onPressed: () => context.go('/')),
       ),
       body: Column(
@@ -62,7 +59,7 @@ class _ConfigViewerState extends State<ConfigViewer> {
             padding: const EdgeInsets.all(16),
             color: theme.colorScheme.errorContainer,
             child: Text(
-              'Changing configs by hand is untested! Use without any warranty!',
+              '手动修改配置未经测试！使用需自行承担风险！',
               style: TextStyle(color: theme.colorScheme.onErrorContainer),
             ),
           ),
@@ -70,7 +67,6 @@ class _ConfigViewerState extends State<ConfigViewer> {
             child: ListView.builder(
               itemCount: AppSettings.values.length,
               itemBuilder: (context, i) {
-                final store = Matrix.of(context).store;
                 final appSetting = AppSettings.values[i];
                 var value = '';
                 if (appSetting is AppSettings<String>) {
@@ -88,7 +84,7 @@ class _ConfigViewerState extends State<ConfigViewer> {
                 return ListTile(
                   title: Text(appSetting.name),
                   subtitle: Text(value),
-                  onTap: () => _changeSetting(appSetting, store, value),
+                  onTap: () => _changeSetting(appSetting, value),
                 );
               },
             ),

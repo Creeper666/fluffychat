@@ -55,11 +55,11 @@ class _HomePageState extends State<HomePage> {
       if (annStr != null || postsStr != null) {
         _safeSetState(() {
           if (annStr != null) {
-            final List<dynamic> annJson = (annStr.isNotEmpty) ? (jsonDecode(annStr) as List<dynamic>) : [];
+            final annJson = (annStr.isNotEmpty) ? (jsonDecode(annStr) as List<dynamic>) : <dynamic>[];
             _announcement = annJson.whereType<Map<String, dynamic>>().map(WpPost.fromJson).toList();
           }
           if (postsStr != null) {
-            final List<dynamic> postsJson = (postsStr.isNotEmpty) ? (jsonDecode(postsStr) as List<dynamic>) : [];
+            final postsJson = (postsStr.isNotEmpty) ? (jsonDecode(postsStr) as List<dynamic>) : <dynamic>[];
             _posts = postsJson.whereType<Map<String, dynamic>>().map(WpPost.fromJson).toList();
           }
           if (tpStr != null) {

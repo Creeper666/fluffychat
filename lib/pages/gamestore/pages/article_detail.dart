@@ -158,7 +158,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                           return _SizedNetworkImage(url: src, maxEdge: 350);
                         }),
                         TagExtension(tagsToExtend: {'video'}, builder: (context) {
-                          String? src = context.attributes['src'];
+                          var src = context.attributes['src'];
                           if (src == null || src.isEmpty) {
                             final children = context.element?.children;
                             if (children != null) {
