@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:fluffychat/utils/platform_infos.dart';
 
@@ -22,72 +22,12 @@ class CinnyChatPage extends StatefulWidget {
 
 class _CinnyChatPageState extends State<CinnyChatPage>
     with AutomaticKeepAliveClientMixin {
-  WebViewController? _controller;
+  InAppWebViewController? _controller;
   bool _isLoading = true;
   String? _errorMessage;
 
   @override
   bool get wantKeepAlive => true;
-
-  @override
-  void initState() {
-    super.initState();
-    if (PlatformInfos.isAndroid) {
-      _initWebView();
-    }
-  }
-
-  void _initWebView() {
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(Colors.transparent)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageStarted: (String url) {
-            if (mounted) {
-              setState(() {
-                _isLoading = true;
-                _errorMessage = null;
-              });
-            }
-          },
-          onPageFinished: (String url) {
-            if (mounted) {
-              setState(() {
-                _isLoading = false;
-              });
-            }
-          },
-          onWebResourceError: (WebResourceError error) {
-            if (mounted) {
-              // 检查是否为网络错误
-              final isNetworkError =
-                  error.errorType == WebResourceErrorType.hostLookup ||
-                  error.errorType == WebResourceErrorType.connect ||
-                  error.errorType == WebResourceErrorType.timeout ||
-                  error.description.toLowerCase().contains('network') ||
-                  error.description.toLowerCase().contains('connection') ||
-                  error.description.toLowerCase().contains('internet');
-
-              if (isNetworkError) {
-                // 网络错误：显示错误信息，让用户手动重试
-                setState(() {
-                  _isLoading = false;
-                  _errorMessage = '网络连接失败: ${error.description}';
-                });
-              } else {
-                // 其他错误：自动刷新
-                _refresh();
-              }
-            }
-          },
-          onNavigationRequest: (NavigationRequest request) {
-            return NavigationDecision.navigate;
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse(widget.cinnyUrl));
-  }
 
   Future<void> _refresh() async {
     if (_controller != null) {
@@ -115,13 +55,68 @@ class _CinnyChatPageState extends State<CinnyChatPage>
       return _buildDesktopView();
     }
 
-    // Android 使用 WebView
+    // Android 使用 InAppWebView
     return Stack(
       children: [
         if (_errorMessage != null)
           _buildErrorWidget()
-        else if (_controller != null)
-          WebViewWidget(controller: _controller!),
+        else
+          InAppWebView(
+            initialUrlRequest: URLRequest(url: WebUri(widget.cinnyUrl)),
+            initialSettings: InAppWebViewSettings(
+              javaScriptEnabled: true,
+              domStorageEnabled: true,
+              databaseEnabled: true,
+              useHybridComposition: true,
+              allowFileAccessFromFileURLs: true,
+              allowUniversalAccessFromFileURLs: true,
+              mediaPlaybackRequiresUserGesture: false,
+              cacheEnabled: true,
+              thirdPartyCookiesEnabled: true,
+            ),
+            onWebViewCreated: (controller) {
+              _controller = controller;
+            },
+            onLoadStart: (controller, url) {
+              if (mounted) {
+                setState(() {
+                  _isLoading = true;
+                  _errorMessage = null;
+                });
+              }
+            },
+            onLoadStop: (controller, url) {
+              if (mounted) {
+                setState(() {
+                  _isLoading = false;
+                });
+              }
+            },
+            onReceivedError: (controller, request, error) {
+              if (mounted) {
+                // 只处理灾难性错误：完全无法连接到服务器
+                final errorDescription = error.description.toLowerCase();
+                final errorTypeStr = error.type.toString().toLowerCase();
+                final isCatastrophic =
+                    errorDescription.contains('err_internet_disconnected') ||
+                    errorDescription.contains('err_name_not_resolved') ||
+                    errorTypeStr.contains('host') ||
+                    errorTypeStr.contains('lookup');
+
+                if (isCatastrophic) {
+                  setState(() {
+                    _isLoading = false;
+                    _errorMessage = '无法连接到服务器: ${error.description}';
+                  });
+                }
+                // 其他非灾难性错误：不处理，让 WebView 自己处理
+              }
+            },
+            onConsoleMessage: (controller, consoleMessage) {
+              // 可选：打印控制台消息用于调试
+              // print('Console: ${consoleMessage.message}');
+            },
+          ),
         if (_isLoading)
           Container(
             color: Theme.of(context).scaffoldBackgroundColor,
