@@ -8,7 +8,6 @@ import 'package:fluffychat/utils/platform_infos.dart';
 /// - Android: 使用 WebView 嵌入 Cinny Web 客户端
 /// - Linux/Windows: 提供按钮在浏览器中打开 Cinny
 class CinnyChatPage extends StatefulWidget {
-  /// Cinny 实例的 URL，默认使用官方实例
   final String cinnyUrl;
 
   const CinnyChatPage({
@@ -73,6 +72,11 @@ class _CinnyChatPageState extends State<CinnyChatPage>
               mediaPlaybackRequiresUserGesture: false,
               cacheEnabled: true,
               thirdPartyCookiesEnabled: true,
+              verticalScrollBarEnabled: false,
+              horizontalScrollBarEnabled: false,
+              transparentBackground: true,
+              supportZoom: false,
+              forceDark: ForceDark.OFF,
             ),
             onWebViewCreated: (controller) {
               _controller = controller;
