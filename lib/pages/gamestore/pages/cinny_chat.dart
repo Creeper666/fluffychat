@@ -81,6 +81,26 @@ class _CinnyChatPageState extends State<CinnyChatPage>
             onWebViewCreated: (controller) {
               _controller = controller;
             },
+            shouldOverrideUrlLoading: (controller, navigationAction) async {
+              final uri = navigationAction.request.url;
+              if (uri == null) {
+                return NavigationActionPolicy.ALLOW;
+              }
+
+              // 获取默认域名的主机名
+              final defaultHost = Uri.parse(widget.cinnyUrl).host;
+
+              // 如果导航的目标是默认域名，允许在 WebView 内加载
+              if (uri.host == defaultHost) {
+                return NavigationActionPolicy.ALLOW;
+              }
+
+              // 其他域名在外部浏览器打开
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+              return NavigationActionPolicy.CANCEL;
+            },
             onLoadStart: (controller, url) {
               if (mounted) {
                 setState(() {
